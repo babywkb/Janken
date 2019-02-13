@@ -1,10 +1,10 @@
 <template>
-  <div class="root">
+  <div id="janken">
     <p>じゃんけん……</p>
     <p>
-      <HandButton :phase="{phase}" :janken="this.janken" :hand='GU'/>
-      <HandButton :phase="{phase}" :janken="this.janken" :hand='CHOKI'/>
-      <HandButton :phase="{phase}" :janken="this.janken" :hand="PA"/>
+      <HandButton :phase='phase' :janken='janken' :hand='GU'/>
+      <HandButton :phase='phase' :janken='janken' :hand='CHOKI'/>
+      <HandButton :phase='phase' :janken='janken' :hand='PA'/>
       <button class="reset-button" :disabled="false" @click:="reset">もう一回</button>
     </p>
     <p v-if="this.phase === 'INIT'">ぽん！</p>
@@ -23,16 +23,22 @@
 </template>
 
 <script>
+import HandButton from './HandButton.vue'
+
 export default {
+  el: "#janken",
   name: "Janken",
   props: {
     msg: String
   },
+  components: {
+    HandButton
+  },
   beforeMount: function() {
-    this.setPhase("INIT");
-    this.setPlayer("GU");
-    this.setEnemy("GU");
-    this.setIssue("DRAW");
+    this.setPhase(INIT);
+    this.setPlayer(GU);
+    this.setEnemy(GU);
+    this.setIssue(DRAW);
   },
   methods: {
     janken: async hand => {
@@ -66,15 +72,15 @@ export default {
       this.issue = issue;
     },
     reset: function() {
-      this.etPhase("INIT");
+      this.setPhase(INIT);
     }
   },
   data() {
     return {
-      phase: "",
-      player: "",
-      enemy: "",
-      issue: "",
+      phase: String,
+      player: String,
+      enemy: String,
+      issue: String,
       hands: {
         GU: "✊",
         CHOKI: "✌️",
