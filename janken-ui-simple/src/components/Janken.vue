@@ -2,9 +2,9 @@
   <div id="janken">
     <p>じゃんけん……</p>
     <p>
-      <HandButton :phase='phase' :janken='janken' :hand='GU'/>
-      <HandButton :phase='phase' :janken='janken' :hand='CHOKI'/>
-      <HandButton :phase='phase' :janken='janken' :hand='PA'/>
+      <HandButton :phase="phase" v-on:call-parent="jankenParent" hand="GU"/>
+      <HandButton :phase="phase" v-on:call-parent="jankenParent" hand="CHOKI"/>
+      <HandButton :phase="phase" v-on:call-parent="jankenParent" hand="PA"/>
       <button class="reset-button" :disabled="false" @click:="reset">もう一回</button>
     </p>
     <p v-if="this.phase === 'INIT'">ぽん！</p>
@@ -23,10 +23,9 @@
 </template>
 
 <script>
-import HandButton from './HandButton.vue'
+import HandButton from "./HandButton.vue";
 
 export default {
-  el: "#janken",
   name: "Janken",
   props: {
     msg: String
@@ -35,23 +34,12 @@ export default {
     HandButton
   },
   beforeMount: function() {
-    this.setPhase(INIT);
-    this.setPlayer(GU);
-    this.setEnemy(GU);
-    this.setIssue(DRAW);
+    this.setPhase("INIT");
+    this.setPlayer("GU");
+    this.setEnemy("GU");
+    this.setIssue("DRAW");
   },
   methods: {
-    janken: async hand => {
-      this.setPhase("STARTED");
-      const headers = { "Content-Type": "application/json" };
-      const body = JSON.stringify({ player: hand });
-      const res = await fetch("/api/janken", { method: "POST", headers, body });
-      const { player, enemy, issue } = await res.json();
-      this.setPhase("FINISHED");
-      this.setPlayer(player);
-      this.setEnemy(enemy);
-      this.setIssue(issue);
-    },
     activate: function() {
       if (this.phase !== "FINISHED") {
         return true;
@@ -59,8 +47,8 @@ export default {
         return false;
       }
     },
-    setPhase: function(phase) {
-      this.phase = phase;
+    setPhase: function(AfterPhase) {
+      this.phase = AfterPhase;
     },
     setPlayer: function(player) {
       this.player = player;
@@ -72,7 +60,22 @@ export default {
       this.issue = issue;
     },
     reset: function() {
-      this.setPhase(INIT);
+      this.setPhase("INIT");
+    },
+    jankenParent: async function(hand) {
+      this.setPhase("STARTED");
+      const headers = { "Content-Type": "application/json" };
+      const body = JSON.stringify({ player: hand });
+      const res = await fetch("/api/janken", { method: "POST", headers, body });
+      if (res.ok) {
+        const { player, enemy, issue } = await res.json();
+        this.setPhase("FINISHED");
+        this.setPlayer(player);
+        this.setEnemy(enemy);
+        this.setIssue(issue);
+      } else {
+        this.setPhase("FINISHED");
+      }
     }
   },
   data() {

@@ -1,16 +1,17 @@
 <template>
   <div class="hand-button">
-    <button @click="janken(hand)" :disabled="false">{{hands[hand]}}</button>
+    <button @click="jankenChild(hand)">{{hands[hand]}}</button>
   </div>
 </template>
 
 <script>
 export default {
   name: "HandButton",
-  props: {
-    phase: null,
-    janken: null,
-    hand: null
+  props: ["hand"],
+  methods: {
+    jankenChild(hand) {
+      this.$emit("call-parent", hand);
+    }
   },
   data() {
     return {
