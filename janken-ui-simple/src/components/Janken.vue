@@ -2,9 +2,9 @@
   <div id="janken">
     <p>じゃんけん……</p>
     <p>
-      <HandButton :phase="phase" v-on:call-parent="jankenParent" hand="GU"/>
-      <HandButton :phase="phase" v-on:call-parent="jankenParent" hand="CHOKI"/>
-      <HandButton :phase="phase" v-on:call-parent="jankenParent" hand="PA"/>
+      <HandButton :phase="phase" @call-parent="jankenParent" hand="GU"/>
+      <HandButton :phase="phase" @call-parent="jankenParent" hand="CHOKI"/>
+      <HandButton :phase="phase" @call-parent="jankenParent" hand="PA"/>
       <button class="reset-button" :disabled="false" @click="reset">もう一回</button>
     </p>
     <p v-if="this.phase === 'INIT'">ぽん！</p>
